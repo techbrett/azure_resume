@@ -18,9 +18,12 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Upload Files to Blob Storage
-      run: |
-        az storage blob upload-batch --account-name techbrett2 --auth-mode login -d '$web' -s . --overwrite
+    - name: Upload to blob storage
+      uses: azure/CLI@v2
+      with:
+        azcliversion: latest
+        inlineScript: |
+         az storage blob upload-batch --account-name techbrett2 --auth-mode key --account-key '${{ secrets.AZURE_STORAGE_KEY }}' -d '$web' -s . --overwrite
 
     - name: Purge CDN Endpoint
       run: |
