@@ -1,29 +1,32 @@
-name: update site
+name: Update Site
 
 on:
-    push:
-        branches: [ main ]
+  push:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    - uses: Azure/login@v2
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: Azure/login@v2
       with:
-          creds: '${{ secrets.AZURE_CREDENTIALS }}'
-    - name: Upload to blob storage
-      uses: azure/CLI@v2
-      with:
-        azcliversion: latest
-        inlineScript: |
-            az storage blob upload-batch --account-name techbrett2 --auth-mode login -d '$web' -s . --overwrite
-    - name: Purge CDN endpoint
-      uses: Azure/cli@v2.0.0
-      with:
-        inlineScript: |
-           az cdn endpoint purge --content-paths  "/*" --profile-name "techbrett2" --name "techbrett2" --resource-group "techbrett"
-    # Azure logout
-    - name: logout
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Upload Files to Blob Storage
       run: |
-            az logout
+        az storage blob upload-batch --account-name techbrett2 --auth-mode login -d '$web' -s . --overwrite
+
+    - name: Purge CDN Endpoint
+      run: |
+        az cdn endpoint purge --content-paths "/*" --profile-name "techbrett2" --name "techbrett2" --resource-group "techbrett"
+
+    - name: Azure Logout
+      run: |
+        az logout
       if: always()
