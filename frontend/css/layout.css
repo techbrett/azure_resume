@@ -535,6 +535,15 @@ ul#nav li.current a { color: #F06000; }
   0%   { width: 0px;  }
   100% { width: 50%;  }
 }
+.skills-container {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 20px;
+}
+.skill-column {
+   flex: 1;
+   min-width: 300px; /* Ensures columns stack on smaller screens */
+}
 
 /* ------------------------------------------------------------------ */
 /* e. Portfolio Section
